@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>متتبع الإيرادات والمصروفات اليومية</title>
+    <link rel="stylesheet" href="./dist/output.css" />
+    <link rel="stylesheet" href="./publick/@fortawesome/fontawesome-free/css/all.min.css" />
+    <link rel="stylesheet" href="./publick/sweetalert2/dist/sweetalert2.min.css" />
+</head>
+
+<body class="min-h-screen p-4 sm:p-6 lg:p-10 bg-slate-50">
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-8 text-center">
+            <p class="text-sm uppercase tracking-[0.3em] text-slate-500">متتبع المصروفات والإيرادات</p>
+            <h1 class="mt-3 text-4xl font-semibold text-slate-900 sm:text-5xl">تطبيق يومي للإيرادات والمصروفات</h1>
+            <p class="mt-3 text-slate-600 max-w-2xl mx-auto">أضف الإيرادات والمصروفات اليومية، حرر أو احذف في أي وقت،
+                واستعرض الإجماليات.</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="mb-8 flex justify-center gap-4 flex-wrap">
+            <button id="tab-form"
+                class="tab-button active inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900 text-white transition hover:bg-sky-500/50">
+                <i class="fas fa-plus"></i> إضافة سجل
+            </button>
+            <button id="tab-income"
+                class="tab-button inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-100 text-emerald-700 transition hover:bg-emerald-200">
+                <i class="fas fa-arrow-down"></i> الإيرادات
+            </button>
+            <button id="tab-expense"
+                class="tab-button inline-flex items-center gap-2 px-6 py-3 rounded-full bg-rose-100 text-rose-700 transition hover:bg-rose-200">
+                <i class="fas fa-arrow-up"></i> المصروفات
+            </button>
+            <button id="tab-summary"
+                class="tab-button inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-100 text-blue-700 transition hover:bg-blue-200">
+                <i class="fas fa-chart-pie"></i> الملخص
+            </button>
+        </div>
+
+        <main>
+
+            <!-- PAGE 1: Add Form -->
+            <div id="page-form" class="page-content">
+                <div class="grid gap-8">
+                    <section class="card p-6">
+                        <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                            <div>
+                                <h2 class="text-2xl font-semibold text-slate-900">أضف سجل جديد</h2>
+                                <p class="mt-2 text-sm text-slate-500">سجل الإيرادات والمصروفات اليومية بسهولة.</p>
+                            </div>
+                        </div>
+
+                        <form id="transaction-form" class="mt-6 grid gap-4">
+                            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-slate-700"
+                                        for="description">الوصف</label>
+                                    <input id="description" name="description" type="text"
+                                        class="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-slate-500 focus:outline-none"
+                                        placeholder="مثل دخل حر" required />
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-slate-700"
+                                        for="type">النوع</label>
+                                    <select id="type" name="type"
+                                        class="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-slate-500 focus:outline-none">
+                                        <option value="income">إيراد</option>
+                                        <option value="expense">مصروف</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="mb-2 block text-sm font-medium text-slate-700"
+                                        for="date">التاريخ</label>
+                                    <input id="date" name="date" type="date"
+                                        class="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-slate-500 focus:outline-none"
+                                        required />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-slate-700" for="amount">المبلغ</label>
+                                <input id="amount" name="amount" type="number" min="0" step="0.01"
+                                    class="w-full rounded-3xl border border-slate-300 bg-slate-50 px-4 py-3 text-slate-900 focus:border-slate-500 focus:outline-none"
+                                    placeholder="0.00" required />
+                            </div>
+
+                            <button id="submit-button" type="submit"
+                                class="inline-flex items-center justify-center rounded-3xl bg-slate-900 px-6 py-3 text-white transition hover:bg-slate-700">إضافة
+                                سجل</button>
+                        </form>
+                    </section>
+
+                    <!-- Summary Stats -->
+                    <section class="card overflow-hidden p-6">
+                        <div class="grid gap-4 md:grid-cols-4">
+                            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">إجمالي الإيرادات</p>
+                                <p id="income-total" class="mt-3 text-2xl font-semibold text-emerald-600">$0.00</p>
+                            </div>
+                            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">إجمالي المصروفات</p>
+                                <p id="expense-total" class="mt-3 text-2xl font-semibold text-rose-600">$0.00</p>
+                            </div>
+                            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">الرصيد الكلي</p>
+                                <p id="balance-total" class="mt-3 text-2xl font-semibold text-slate-900">$0.00</p>
+                            </div>
+                            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                <p class="text-sm uppercase tracking-[0.24em] text-slate-500">رصيد الشهر الحالي</p>
+                                <p id="monthly-balance" class="mt-3 text-2xl font-semibold text-blue-600">$0.00</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- PAGE 2: Income -->
+            <div id="page-income" class="page-content hidden">
+                <section class="card p-6">
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <h2 class="text-2xl font-semibold text-slate-900 flex items-center gap-2">
+                            <i class="fas fa-arrow-down text-emerald-600"></i> الإيرادات
+                        </h2>
+                        <div id="income-count"
+                            class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-emerald-700">
+                            <span class="text-sm font-semibold">0 سجل</span>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-emerald-50 text-emerald-700 sticky top-0">
+                                <tr>
+                                    <th class="px-4 py-3 text-center font-medium uppercase tracking-[0.16em] w-1/3">
+                                        التاريخ</th>
+                                    <th class="px-4 py-3 text-right font-medium uppercase tracking-[0.16em] w-1/3">
+                                        المبلغ</th>
+                                    <th class="px-4 py-3 text-center font-medium uppercase tracking-[0.16em] w-1/3">
+                                        الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="income-table" class="bg-white text-slate-700"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- PAGE 3: Expenses -->
+            <div id="page-expense" class="page-content hidden">
+                <section class="card p-6">
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <h2 class="text-2xl font-semibold text-slate-900 flex items-center gap-2">
+                            <i class="fas fa-arrow-up text-rose-600"></i> المصروفات
+                        </h2>
+                        <div id="expense-count"
+                            class="inline-flex items-center gap-2 rounded-full bg-rose-100 px-4 py-2 text-rose-700">
+                            <span class="text-sm font-semibold">0 سجل</span>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-rose-50 text-rose-700 sticky top-0">
+                                <tr>
+                                    <th class="px-4 py-3 text-center font-medium uppercase tracking-[0.16em] w-1/3">
+                                        التاريخ</th>
+                                    <th class="px-4 py-3 text-right font-medium uppercase tracking-[0.16em] w-1/3">
+                                        المبلغ</th>
+                                    <th class="px-4 py-3 text-center font-medium uppercase tracking-[0.16em] w-1/3">
+                                        الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expense-table" class="bg-white text-slate-700"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- PAGE 4: Summary -->
+            <div id="page-summary" class="page-content hidden">
+                <section class="card p-6">
+                    <h2 class="text-2xl font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                        <i class="fas fa-chart-pie"></i> ملخص الأشهر
+                    </h2>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-slate-200 text-sm">
+                            <thead class="bg-slate-100 text-slate-600">
+                                <tr>
+                                    <th class="px-4 py-3 text-left font-medium uppercase tracking-[0.16em]">الشهر والسنة
+                                    </th>
+                                    <th class="px-4 py-3 text-right font-medium uppercase tracking-[0.16em]">إجمالي
+                                        الإيرادات</th>
+                                    <th class="px-4 py-3 text-right font-medium uppercase tracking-[0.16em]">إجمالي
+                                        المصروفات</th>
+                                    <th class="px-4 py-3 text-right font-medium uppercase tracking-[0.16em]">الرصيد</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthly-table" class="bg-white text-slate-700"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="./publick/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="./src/app.js" defer></script>
+</body>
+
+</html>

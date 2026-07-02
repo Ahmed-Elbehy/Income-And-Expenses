@@ -1,0 +1,52 @@
+@import "./fonts.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-white shadow-lg rounded-3xl border border-slate-200;
+  }
+}
+
+#swal2-html-container {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem;
+}
+
+/* Table Styling for Long Text */
+table tbody td {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* Description row - full width */
+table tbody tr:has(td[colspan="3"]) td {
+  width: 100%;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 1.6;
+  padding: 1rem 1rem !important;
+  background-color: #f8fafc;
+}
+
+table tbody tr {
+  vertical-align: middle;
+}
+
+/* Better row height for wrapped text */
+table tbody td {
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+}
