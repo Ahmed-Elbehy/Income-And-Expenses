@@ -16,6 +16,20 @@ let records = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 // Set today's date as default
 document.getElementById("date").valueAsDate = new Date();
 
+// Back-to-top button
+const backToTopButton = document.getElementById("back-to-top");
+
+window.addEventListener("scroll", () => {
+  const isVisible = window.scrollY > 500;
+  console.log(window.scrollY);
+  backToTopButton.classList.toggle("hidden", !isVisible);
+  backToTopButton.classList.toggle("flex", isVisible);
+});
+
+backToTopButton.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
 // Tab Navigation
 const tabButtons = document.querySelectorAll(".tab-button");
 const pageContents = document.querySelectorAll(".page-content");
@@ -318,7 +332,7 @@ form.addEventListener("submit", (event) => {
   const date = form.elements.date.value;
   const amount = parseFloat(form.elements.amount.value);
 
-  if (!description || !date || Number.isNaN(amount) || amount <= 0) {
+  if (!description || !date || Number.isNaN(amount) || amount <= 1) {
     Swal.fire("خطأ في الإدخال", "يرجى إدخال جميع البيانات بشكل صحيح.", "error");
     return;
   }
